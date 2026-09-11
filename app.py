@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, render_template, jsonify, send_file
 import os
 import requests
 from datetime import datetime
@@ -25,7 +25,7 @@ class UniversalDownloader:
         else:
             return 'unknown'
             
-    # এই ফাংশনটি YouTube/TikTok-এর বট সিকিউরিটি বাইপাস করার জন্য
+    # YouTube/TikTok-এর বট সিকিউরিটি বাইপাস করার জন্য
     def get_bypass_headers(self, path):
         return {
             'outtmpl': os.path.join(path, 'Video_%(id)s.%(ext)s'),
@@ -63,6 +63,11 @@ class UniversalDownloader:
             return {'status': 'error', 'message': f'Error: {str(e)}'}
 
 downloader = UniversalDownloader()
+
+# --- ওয়েবসাইট শো করার জন্য হোমপেজ রাউট (যা আগে বাদ পড়েছিল) ---
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/download', methods=['POST'])
 def download():
