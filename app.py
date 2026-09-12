@@ -1,10 +1,13 @@
 from flask import Flask, request, render_template, jsonify, send_file
+from flask_cors import CORS # <-- এই লাইনটি যুক্ত করা হয়েছে
 import os
 import requests
 from datetime import datetime
 import yt_dlp
 
 app = Flask(__name__)
+CORS(app) # <-- এই লাইনটি যুক্ত করা হয়েছে (এটি অ্যাপের রিকোয়েস্ট ব্লক হতে দেবে না)
+
 app.config['SECRET_KEY'] = 'your-secret-key-here-change-this'
 
 DOWNLOAD_DIR = os.path.join(os.getcwd(), 'downloads')
@@ -25,7 +28,6 @@ class UniversalDownloader:
         else:
             return 'unknown'
             
-    # YouTube/TikTok-এর বট সিকিউরিটি বাইপাস করার জন্য
     def get_bypass_headers(self, path):
         return {
             'outtmpl': os.path.join(path, 'Video_%(id)s.%(ext)s'),
@@ -64,7 +66,6 @@ class UniversalDownloader:
 
 downloader = UniversalDownloader()
 
-# --- ওয়েবসাইট শো করার জন্য হোমপেজ রাউট (যা আগে বাদ পড়েছিল) ---
 @app.route('/')
 def index():
     return render_template('index.html')
